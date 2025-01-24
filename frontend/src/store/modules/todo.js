@@ -1,31 +1,16 @@
 const initialState = {
-  list: [
-    {
-      id: 0,
-      text: "리액트 공부하기",
-      done: false, // done : false는 할 일 목록
-    },
-    {
-      id: 1,
-      text: "척추의 요정이 말합니다! 척추 펴기!",
-      done: true, // done : true는 완료 목록
-    },
-    {
-      id: 2,
-      text: "운동하기",
-      done: false,
-    },
-  ],
+  list: [],
 };
 
-const count = initialState.list.length; // 3
+const count = initialState.list.length; //3
 initialState["nextID"] = count;
 
-// action.type에 대한 상수 설정
+// action type에 대한 상수 설정
 const CREATE = "todo/CREATE";
 const DONE = "todo/DONE";
+const INIT = "todo/INIT";
 
-// components에서 사용 될 액션 반환 함수
+// components 에서 사용될 액션 반환 함수
 export function create(payload) {
   return {
     type: CREATE,
@@ -40,11 +25,28 @@ export function done(id) {
   };
 }
 
+// data:{id, text, done}[]
+export function init(data) {
+  return {
+    type: INIT,
+    data: data,
+  };
+}
+
 export function todoReducer(state = initialState, action) {
   switch (action.type) {
+    case INIT:
+      return {
+        ...state,
+        list: action.data,
+        nextID:
+          action.data.length === 0
+            ? 1
+            : action.data[action.data.length - 1].id + 1,
+      };
     case CREATE:
       if (action.payload.text.trim() === "") return state;
-      console.log("create", action);
+      console.log("CREATE 호출됨", action);
       return {
         ...state,
         list: state.list.concat({
@@ -55,15 +57,15 @@ export function todoReducer(state = initialState, action) {
         nextID: action.payload.id + 1,
       };
     case DONE:
-      console.log("done", action);
+      console.log("DONE 호출됨", action);
       return {
         ...state,
         list: state.list.map((todo) => {
           console.log("in map", todo);
-          // 바꾸고자 하는 조건
+          // 바꾸고자 하는 조건건
           if (todo.id === action.id) {
             return {
-              ...todo, // done을 제외한 text, id 값을 유지시키기 위한 전개 연산
+              ...todo, // done을 제외한 text, id 값을 유지시키기 위한 전개연산
               done: true, // done 값 덮어쓰기
             };
           } else return todo;
