@@ -1,8 +1,9 @@
 import { useSelector } from "react-redux";
 import "../style/doneList.scss";
+import { ReduxState } from "../types/types";
 
 export default function DoneList() {
-  const todoList = useSelector((state) => state.todo.list); // store/index.js에 key 값이 todo임
+  const todoList = useSelector((state: ReduxState) => state.todo.list); // store/index.js에 key 값이 todo임
   // console.log(todoList); // 배열(map을 사용해서 list 나오게 하기 위함)
 
   const todoIsDone = todoList.filter((todo) => {

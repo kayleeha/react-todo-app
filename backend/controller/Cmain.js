@@ -58,3 +58,33 @@ exports.patchDoneState = async (req, res) => {
 };
 
 // 수정, 삭제에 대한 api
+exports.deleteTodo = async (req, res) => {
+  try {
+    const { todoId } = req.params;
+    const isDeleted = await Todo.destroy({ where: { id: todoId } });
+
+    Boolean(isDeleted)
+      ? res.send({ isSuccess: true })
+      : res.send({ isSuccess: false }); // 잘못된 todoId를 보내는 경우
+  } catch (err) {
+    console.log("server err", err);
+    res.status(500).send("Server Error!");
+  }
+};
+
+exports.patchContent = async (req, res) => {
+  // req.body = {id, text}
+  try {
+    const { id, text } = req.body;
+    const [isUpdated] = await Todo.update(
+      { text: text },
+      { where: { id: id } }
+    );
+    Boolean(isUpdated)
+      ? res.send({ isSuccess: true })
+      : res.send({ isSuccess: false }); // 잘못된 todoId를 보내는 경우
+  } catch (err) {
+    console.log("server err", err);
+    res.status(500).send("Server Error!");
+  }
+};
